@@ -11,9 +11,9 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start bg-white relative overflow-hidden px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
+    <div className="flex flex-col items-center justify-start bg-white relative overflow-hidden w-full py-8 sm:py-12 md:py-16">
       {/* Save the Date Image */}
-      <div className="z-10 mb-6 sm:mb-8 md:mb-12">
+      <div className="z-10 mb-12 sm:mb-8 md:mb-12">
         <img 
           src={saveTheDateImage} 
           alt="Save the Date" 
@@ -21,7 +21,7 @@ const Home = () => {
         />
       </div>
 
-      {/* Three scratch card hearts - responsive sizing */}
+      {/* Three scratch card hearts */}
       <div className="flex gap-2 sm:gap-3 md:gap-4 items-center justify-center relative z-10 mb-3 sm:mb-4">
         {/* First Heart - Day */}
         <ScratchCard
@@ -91,6 +91,7 @@ const Home = () => {
           style={{ 
             color: '#C9A86A',
             fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
+            lineHeight: '4'
           }}
         >
           Scratch to reveal ✨
@@ -98,13 +99,15 @@ const Home = () => {
       )}
 
       {/* We're Getting Married text */}
-      <div className="text-center z-10 mt-2 sm:mt-4 mb-4 sm:mb-6">
+      <div className="text-center z-10 mt-6 sm:mt-4 mb-4 sm:mb-6">
         <p 
           className="text-sm sm:text-base md:text-xl lg:text-2xl tracking-[0.15em] uppercase"
           style={{ 
             color: '#5A5A5A',
             fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Didot', serif",
             fontWeight: 500,
+            letterSpacing: '0px',
+            lineHeight: '0.5'
           }}
         >
           WE'RE
@@ -115,6 +118,8 @@ const Home = () => {
             color: '#5A5A5A',
             fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Didot', serif",
             fontWeight: 500,
+             letterSpacing: '0px',
+            lineHeight: '1.2'
           }}
         >
           GETTING MARRIED!
@@ -122,7 +127,7 @@ const Home = () => {
       </div>
       
       {/* Countdown Section */}
-      <div className="w-full mt-60 sm:mt-6 md:mt-8">
+      <div className="w-full mt-40 sm:mt-8 md:mt-10">
         <CountdownPage/>
       </div>
     </div>
