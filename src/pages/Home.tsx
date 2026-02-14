@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import ScratchCard from '@/components/ScratchCard2';
 import saveTheDateImage from '@/assets/save thedate.png';
-import CountdownPage from "../components/Countdownpage"
+import CountdownPage from "../components/Countdownpage";
 
 const Home = () => {
-  const [isRevealed, setIsRevealed] = useState(false);
   const [hasStartedScratching, setHasStartedScratching] = useState(false);
 
   const handleScratchStart = () => {
@@ -12,52 +11,51 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-white relative overflow-hidden px-0 md:px-4 pt-4 pb-4">
-      {/* Top: Save the Date Image */}
-      <div className="z-10 mb-12 px-4 md:px-0">
+    <div className="flex flex-col items-center justify-start bg-white relative overflow-hidden px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
+      {/* Save the Date Image */}
+      <div className="z-10 mb-6 sm:mb-8 md:mb-12">
         <img 
           src={saveTheDateImage} 
           alt="Save the Date" 
-          className="w-48 sm:w-64 md:w-80 h-auto object-contain"
+          className="w-36 sm:w-48 md:w-64 lg:w-80 h-auto object-contain"
         />
       </div>
 
-      {/* Center: Three scratch card hearts in a row */}
-      <div className="flex gap-4 sm:gap-4 items-center justify-center relative z-10 mb-6 px-4 md:px-0">
+      {/* Three scratch card hearts - responsive sizing */}
+      <div className="flex gap-2 sm:gap-3 md:gap-4 items-center justify-center relative z-10 mb-3 sm:mb-4">
         {/* First Heart - Day */}
         <ScratchCard
-          width={80}
-          height={76}
-          onComplete={() => setIsRevealed(true)}
+          width={window.innerWidth < 640 ? 70 : 80}
+          height={window.innerWidth < 640 ? 66 : 76}
+          onComplete={() => {}}
           onScratchStart={handleScratchStart}
           content={
             <p 
-              className="text-xl sm:text-2xl font-semibold uppercase"
+              className="text-lg sm:text-xl md:text-2xl font-semibold uppercase"
               style={{ 
                 color: '#000000',
                 fontFamily: "'Playfair Display', 'Bodoni Moda', serif",
                 letterSpacing: '0.1em',
-                lineHeight: '4'
               }}
             >
               05
             </p>
           }
         />
+        
         {/* Second Heart - Month */}
         <ScratchCard
-          width={80}
-          height={76}
-          onComplete={() => setIsRevealed(true)}
+          width={window.innerWidth < 640 ? 70 : 80}
+          height={window.innerWidth < 640 ? 66 : 76}
+          onComplete={() => {}}
           onScratchStart={handleScratchStart}
           content={
             <p 
-              className="text-xl sm:text-2xl font-semibold uppercase"
+              className="text-lg sm:text-xl md:text-2xl font-semibold uppercase"
               style={{ 
                 color: '#000000',
                 fontFamily: "'Playfair Display', 'Bodoni Moda', serif",
                 letterSpacing: '0.1em',
-                lineHeight: '1.4'
               }}
             >
               05
@@ -67,18 +65,17 @@ const Home = () => {
         
         {/* Third Heart - Year */}
         <ScratchCard
-          width={80}
-          height={76}
-          onComplete={() => setIsRevealed(true)}
+          width={window.innerWidth < 640 ? 70 : 80}
+          height={window.innerWidth < 640 ? 66 : 76}
+          onComplete={() => {}}
           onScratchStart={handleScratchStart}
           content={
             <p 
-              className="text-xl sm:text-2xl font-semibold uppercase"
+              className="text-lg sm:text-xl md:text-2xl font-semibold uppercase"
               style={{ 
                 color: '#000000',
                 fontFamily: "'Playfair Display', 'Bodoni Moda', serif",
                 letterSpacing: '0.1em',
-                lineHeight: '1.4'
               }}
             >
               26
@@ -87,15 +84,13 @@ const Home = () => {
         />
       </div>
 
-      {/* Single "Scratch to reveal" text - shows only once, disappears when any heart is scratched */}
+      {/* Scratch hint */}
       {!hasStartedScratching && (
         <p 
-          className="text-xs sm:text-sm tracking-wide text-center z-10 animate-pulse"
+          className="text-[10px] sm:text-xs md:text-sm tracking-wide text-center z-10 animate-pulse mb-4 sm:mb-6"
           style={{ 
             color: '#C9A86A',
             fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
-            marginTop: '-0.5rem',
-            lineHeight: '1.6'
           }}
         >
           Scratch to reveal ✨
@@ -103,76 +98,35 @@ const Home = () => {
       )}
 
       {/* We're Getting Married text */}
-      <div className="text-center z-10 mt-8 sm:mt-10 px-4 md:px-0">
+      <div className="text-center z-10 mt-2 sm:mt-4 mb-4 sm:mb-6">
         <p 
-          className="text-base sm:text-xl md:text-2xl tracking-[0.15em] uppercase"
+          className="text-sm sm:text-base md:text-xl lg:text-2xl tracking-[0.15em] uppercase"
           style={{ 
             color: '#5A5A5A',
             fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Didot', serif",
             fontWeight: 500,
-            letterSpacing: '0.5px',
-            lineHeight: '1'
           }}
         >
           WE'RE
         </p>
         <p 
-          className="text-lg sm:text-2xl md:text-3xl tracking-[0.15em] uppercase mt-1"
+          className="text-base sm:text-lg md:text-2xl lg:text-3xl tracking-[0.15em] uppercase mt-1"
           style={{ 
             color: '#5A5A5A',
             fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Didot', serif",
             fontWeight: 500,
-            letterSpacing: '0em',
-            lineHeight: '1'
           }}
         >
           GETTING MARRIED!
         </p>
       </div>
-
-      {/* Bottom: Names */}
-      <p 
-        className="font-serif text-sm sm:text-xl md:text-2xl tracking-[0.15em] z-10 mb-1 mt-4 sm:mt-6 px-4 md:px-0"
-        style={{ 
-          color: '#7A7A7A', 
-          lineHeight: '1.6',
-          fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Didot', 'Bodoni Moda', serif"
-        }}
-      >
-     
-      </p>
-          
-      <p 
-        className="text-sm sm:text-lg font-semibold tracking-wide mb-1 px-4 md:px-0"
-        style={{ 
-          color: '#000000', 
-          lineHeight: '1.5',
-          fontFamily: "'Playfair Display', 'Bodoni Moda', 'Didot', 'Cormorant Garamond', serif"
-        }}
-      >
-    
-      </p>
       
-      <p 
-        className="italic text-xs sm:text-base tracking-wide mb-0 px-4 md:px-0"
-        style={{ 
-          color: '#7A7A7A', 
-          lineHeight: '1.6',
-          fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Didot', 'Bodoni Moda', serif"
-        }}
-      >
-
-      </p>
-      
-      {/* Countdown Section - pushed closer to content above */}
-      <div className="mt-60">
-         <CountdownPage/>
+      {/* Countdown Section */}
+      <div className="w-full mt-60 sm:mt-6 md:mt-8">
+        <CountdownPage/>
       </div>
-       
     </div>
-  
   );
-
 };
 
 export default Home;

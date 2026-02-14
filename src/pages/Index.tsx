@@ -1,10 +1,7 @@
 import { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
-import Curtain from "@/components/Curtain";
-import InvitationContent from "@/components/InvitationContent";
-import TapPrompt from "@/components/TapPrompt";
-import Home from "./Home"
-// import CountdownPage from "../components/Countdownpage"
+import TheaterCurtain from "@/components/TheaterCurtain";
+import Home from "./Home";
 
 const Index = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,27 +13,28 @@ const Index = () => {
   }, [isOpen]);
 
   return (
-    <div
-      className="relative min-h-screen bg-white overflow-hidden cursor-pointer select-none"
-      onClick={handleReveal}
-      onTouchStart={handleReveal}
-    >
+    <div className="relative min-h-screen bg-white">
       {/* SEO */}
-      <h1 className="sr-only"> Maitri & Moksh — Engagement Invitation</h1>
+      <h1 className="sr-only">Maitri & Moksh — Engagement Invitation</h1>
+      
+      {/* Theater Curtain Section - Using min-height for mobile */}
+      <section className="relative w-full min-h-screen h-screen max-h-screen overflow-hidden">
+        <TheaterCurtain isOpen={isOpen} onOpen={handleReveal} />
+        
+        {/* Scroll hint - only shows after curtain opens */}
+        {isOpen && (
+          <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-0 right-0 flex justify-center animate-bounce z-10">
+            <p className="text-[10px] sm:text-xs md:text-sm tracking-widest uppercase text-white/70">
+              Scroll down ↓
+            </p>
+          </div>
+        )}
+      </section>
 
-      {/* Invitation content behind curtains */}
-      <InvitationContent isVisible={isOpen} />
-
-      {/* Curtains */}
-      <Curtain side="left" isOpen={isOpen} />
-      <Curtain side="right" isOpen={isOpen} />
-
-      {/* Tap prompt */}
-      <AnimatePresence>
-        {!isOpen && <TapPrompt isVisible={!isOpen} />}
-      </AnimatePresence>
-      <Home/>
-      {/* <CountdownPage/> */}
+      {/* Main Content Section */}
+      <section className="relative bg-white">
+        <Home />
+      </section>
     </div>
   );
 };
