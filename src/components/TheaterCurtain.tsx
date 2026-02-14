@@ -10,6 +10,18 @@ interface TheaterCurtainProps {
   currentPage?: number;
 }
 
+// Confetti interface
+interface Confetti {
+  id: number;
+  x: number;
+  y: number;
+  rotation: number;
+  color: string;
+  delay: number;
+  size: number;
+  shape: string;
+}
+
 const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurtainProps) => {
   const [phase, setPhase] = useState<"closed" | "opening" | "open">("closed");
   const [showContent, setShowContent] = useState(false);
@@ -17,6 +29,10 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Confetti state
+  const [confetti, setConfetti] = useState<Confetti[]>([]);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Preload the open curtain image immediately
   useEffect(() => {
@@ -61,21 +77,52 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
     setIsInitialLoad(false);
   }, []);
 
+  // Function to create and show confetti
+  const triggerConfetti = useCallback(() => {
+    setShowConfetti(true);
+    
+    // Create confetti pieces
+    const pieces: Confetti[] = [];
+    const colors = ["#FFD700", "#FFC125", "#FFDF00", "#FFE55C", "#FFEA70", "#FFF4A3"];
+    const shapes = ["circle", "diamond", "star", "square"];
+    
+    for (let i = 0; i < 200; i++) { // Increased count for better coverage
+      pieces.push({
+        id: i,
+        x: Math.random() * 100,
+        y: -20,
+        rotation: Math.random() * 360,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 0.5, // Shorter delay for more immediate effect
+        size: Math.random() * 8 + 3, // Slightly larger
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+      });
+    }
+    
+    setConfetti(pieces);
+  }, []);
+
   const handleClick = useCallback(() => {
     if (phase !== "closed") return;
     
     // Start opening
     setPhase("opening");
+    
+    // Trigger confetti immediately on click (when video starts)
+    triggerConfetti();
+    
     if (videoRef.current && !videoError) {
       videoRef.current.play().catch(error => {
         console.log("Video play failed:", error);
       });
     }
+    
+    // Show content after delay
     setTimeout(() => setShowContent(true), 800);
     
     // Call onOpen prop if provided
     onOpen?.();
-  }, [phase, onOpen, videoError]);
+  }, [phase, onOpen, videoError, triggerConfetti]);
 
   const handleTimeUpdate = useCallback(() => {
     const video = videoRef.current;
@@ -92,8 +139,28 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
   useEffect(() => {
     if (phase === "open") {
       requestAnimationFrame(() => setShowContent(true));
+      
+      // Keep confetti going for a bit longer after image is fully shown
+      // This helps mask any transition flicker
+      
+      // Hide confetti after 5 seconds from when image is fully loaded
+      const timer = setTimeout(() => {
+        setShowConfetti(false);
+        setConfetti([]);
+      }, 5000);
+
+      return () => clearTimeout(timer);
     }
   }, [phase]);
+
+  // Pre-load the image to ensure it's ready
+  const [imageLoaded, setImageLoaded] = useState(false);
+  
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setImageLoaded(true);
+    img.src = curtainOpenImage;
+  }, []);
 
   return (
     <div
@@ -150,6 +217,8 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
+            opacity: imageLoaded ? 1 : 0, // Fade in when loaded
+            transition: 'opacity 0.3s ease-in-out',
           }}
         />
       )}
@@ -288,6 +357,66 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
             </motion.div>
           </div>
         </motion.div>
+      )}
+
+      {/* Confetti - starts immediately on click and continues through transition */}
+      {showConfetti && (
+        <div className="fixed inset-0 z-40 pointer-events-none overflow-hidden">
+          {confetti.map((piece) => {
+            const getShapeStyle = () => {
+              switch (piece.shape) {
+                case "circle":
+                  return { borderRadius: "50%" };
+                case "diamond":
+                  return { 
+                    borderRadius: "0%",
+                    transform: "rotate(45deg)",
+                    clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"
+                  };
+                case "star":
+                  return {
+                    clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)"
+                  };
+                case "square":
+                default:
+                  return { borderRadius: "0%" };
+              }
+            };
+
+            return (
+              <motion.div
+                key={piece.id}
+                className="absolute"
+                style={{
+                  left: `${piece.x}%`,
+                  width: `${piece.size}px`,
+                  height: `${piece.size}px`,
+                  backgroundColor: piece.color,
+                  boxShadow: `0 0 ${piece.size * 2}px ${piece.color}`,
+                  ...getShapeStyle(),
+                }}
+                initial={{
+                  y: piece.y,
+                  rotate: 0,
+                  opacity: 1,
+                  scale: 0,
+                }}
+                animate={{
+                  y: ["0vh", "120vh"],
+                  rotate: [0, piece.rotation * 3, piece.rotation * 6],
+                  x: [0, Math.random() * 60 - 30, Math.random() * 80 - 40],
+                  opacity: [0, 1, 1, 0.8, 0],
+                  scale: [0, 1, 1, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 3.5 + Math.random() * 2.5,
+                  delay: piece.delay,
+                  ease: "easeIn",
+                }}
+              />
+            );
+          })}
+        </div>
       )}
     </div>
   );
