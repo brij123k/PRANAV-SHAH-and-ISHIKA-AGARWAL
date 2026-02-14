@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import venueImage from '@/assets/fairmont sketch.png';
+import venueImage from '@/assets/Layer 1 (1).png';
 
 const CountdownPage = () => {
   const [timeLeft, setTimeLeft] = useState({
