@@ -270,7 +270,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
               transition={{ duration: 0.8, delay: 0.9 }}
             >
               <p 
-                className="font-serif-elegant text-[8px] xs:text-[9px] sm:text-[10px] md:text-xs lg:text-sm tracking-[0.2em] xs:tracking-[0.22em] sm:tracking-[0.25em] md:tracking-[0.3em] lg:tracking-[0.35em] text-gray-700 sm:text-muted-foreground leading-tight uppercase"
+                className="pt-44 font-serif-elegant text-[12px] xs:text-[9px] sm:text-[10px] md:text-xs lg:text-sm tracking-[0.2em] xs:tracking-[0.22em] sm:tracking-[0.25em] md:tracking-[0.3em] lg:tracking-[0.35em] text-gray-700 sm:text-muted-foreground leading-tight uppercase"
                 style={{
                   textShadow: "0 2px 8px rgba(255,255,255,0.8), 0 2px 12px rgba(0,0,0,0.5)",
                 }}
@@ -278,7 +278,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
                 THIS IS WHERE
               </p>
               <p 
-                className="font-serif-elegant text-[8px] xs:text-[9px] sm:text-[10px] md:text-xs lg:text-sm tracking-[0.2em] xs:tracking-[0.22em] sm:tracking-[0.25em] md:tracking-[0.3em] lg:tracking-[0.35em] text-gray-700 sm:text-muted-foreground leading-tight uppercase"
+                className="font-serif-elegant text-[12px] xs:text-[9px] sm:text-[10px] md:text-xs lg:text-sm tracking-[0.2em] xs:tracking-[0.22em] sm:tracking-[0.25em] md:tracking-[0.3em] lg:tracking-[0.35em] text-gray-700 sm:text-muted-foreground leading-tight uppercase"
                 style={{
                   textShadow: "0 2px 8px rgba(255,255,255,0.8), 0 2px 12px rgba(0,0,0,0.5)",
                 }}
@@ -296,7 +296,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
             >
               {/* PRANAV SHAH - UPDATED with increased font sizes for 372px-700px */}
               <motion.h1
-                className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
+                className="text-[28px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Libre Baskerville', serif",
                   color: '#2d2d2d',
@@ -321,7 +321,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
                 <img 
                   src={andImage} 
                   alt="and" 
-                  className="w-14 xs:w-16 sm:w-20 md:w-28 lg:w-36 xl:w-44 2xl:w-52 h-auto object-contain mx-auto"
+                  className="w-20 xs:w-16 sm:w-20 md:w-28 lg:w-36 xl:w-44 2xl:w-52 h-auto object-contain mx-auto"
                   style={{
                     filter: 'opacity(0.9) drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
                     display: 'block', // Ensure it's displayed as block
@@ -332,7 +332,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
 
               {/* ISHIKA AGARWAL - UPDATED with increased font sizes for 372px-700px */}
               <motion.h1
-                className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
+                className="text-[28px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Libre Baskerville', serif",
                   color: '#2d2d2d',
