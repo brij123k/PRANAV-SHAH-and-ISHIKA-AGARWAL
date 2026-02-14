@@ -296,7 +296,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
             >
               {/* PRANAV SHAH - UPDATED with increased font sizes for 372px-700px */}
               <motion.h1
-                className="text-[28px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
+                className="text-[24px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Libre Baskerville', serif",
                   color: '#2d2d2d',
@@ -332,7 +332,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
 
               {/* ISHIKA AGARWAL - UPDATED with increased font sizes for 372px-700px */}
               <motion.h1
-                className="text-[28px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
+                className="text-[24px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Libre Baskerville', serif",
                   color: '#2d2d2d',
