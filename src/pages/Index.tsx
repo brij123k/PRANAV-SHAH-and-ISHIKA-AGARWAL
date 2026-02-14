@@ -15,7 +15,7 @@ const Index = () => {
   return (
     <div className="relative min-h-screen bg-white">
       {/* SEO */}
-      <h1 className="sr-only">Maitri & Moksh — Engagement Invitation</h1>
+      <h1 className="sr-only">PRANAV SHAH AND ISHIKA AGARWAL</h1>
       
       {/* Theater Curtain Section - Using min-height for mobile */}
       <section className="relative w-full min-h-screen h-screen max-h-screen overflow-hidden">

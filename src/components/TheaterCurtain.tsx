@@ -247,7 +247,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
         </div>
       )}
 
-      {/* Invitation Content - with reduced mobile font sizes */}
+      {/* Invitation Content - with reduced mobile font sizes and fixed desktop layout */}
       {showContent && (
         <motion.div
           className="absolute inset-0 z-50 flex items-center justify-center"
@@ -261,7 +261,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
             y: { duration: 1.6, ease: [0.25, 0.1, 0.25, 1] }
           }}
         >
-          <div className="flex flex-col items-center justify-center min-h-screen px-3 sm:px-6 md:px-8 py-2 sm:py-12 md:py-16 text-center">
+          <div className="flex flex-col items-center justify-center min-h-screen px-3 sm:px-6 md:px-8 py-2 sm:py-12 md:py-16 text-center w-full">
             {/* Prayer text - smaller on mobile */}
             <motion.div
               className="mb-4 sm:mb-6 md:mb-8 lg:mb-10"
@@ -287,16 +287,16 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
               </p>
             </motion.div>
 
-            {/* Names section */}
+            {/* Names section - FIXED for desktop */}
             <motion.div
-              className="flex flex-col items-center justify-center gap-0 w-full"
+              className="flex flex-col items-center justify-center gap-0 w-full max-w-4xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={showContent ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 1.1 }}
             >
-              {/* PRANAV SHAH */}
+              {/* PRANAV SHAH - FIXED desktop size */}
               <motion.h1
-                className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[28px] lg:text-4xl xl:text-5xl 2xl:text-6xl leading-tight break-words max-w-full px-2"
+                className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Libre Baskerville', serif",
                   color: '#2d2d2d',
@@ -311,9 +311,9 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
                 PRANAV SHAH
               </motion.h1>
 
-              {/* "and" image */}
+              {/* "and" image - FIXED visibility for desktop */}
               <motion.div
-                className="flex-shrink-0 relative z-10 -mb-2 xs:-mb-3 sm:-mb-4 md:-mb-5 lg:-mb-6 xl:-mb-8"
+                className="flex-shrink-0 relative z-10 -mb-2 xs:-mb-3 sm:-mb-4 md:-mb-6 lg:-mb-8 xl:-mb-10"
                 initial={{ opacity: 0 }}
                 animate={showContent ? { opacity: 1 } : {}}
                 transition={{ duration: 0.8, delay: 1.5 }}
@@ -321,16 +321,18 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
                 <img 
                   src={andImage} 
                   alt="and" 
-                  className="w-14 xs:w-16 sm:w-20 md:w-24 lg:w-32 xl:w-40 2xl:w-48 h-auto object-contain mx-auto"
+                  className="w-14 xs:w-16 sm:w-20 md:w-28 lg:w-36 xl:w-44 2xl:w-52 h-auto object-contain mx-auto"
                   style={{
                     filter: 'opacity(0.9) drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
+                    display: 'block', // Ensure it's displayed as block
+                    visibility: 'visible', // Force visibility
                   }}
                 />
               </motion.div>
 
-              {/* ISHIKA AGARWAL */}
+              {/* ISHIKA AGARWAL - FIXED desktop size */}
               <motion.h1
-                className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[28px] lg:text-4xl xl:text-5xl 2xl:text-6xl leading-tight break-words max-w-full px-2"
+                className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', 'Libre Baskerville', serif",
                   color: '#2d2d2d',
