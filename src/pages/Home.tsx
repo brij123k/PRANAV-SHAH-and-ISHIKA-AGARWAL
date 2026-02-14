@@ -131,7 +131,7 @@ const Home = () => {
       </div>
       
       {/* Countdown Section */}
-      <div className="w-full mt-40 sm:mt-8 md:mt-10">
+      <div className="w-full mt-64 sm:mt-8 md:mt-10">
         <CountdownPage/>
       </div>
     </div>

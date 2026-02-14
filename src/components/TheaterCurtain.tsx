@@ -294,7 +294,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
               animate={showContent ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 1.1 }}
             >
-              {/* PRANAV SHAH - FIXED desktop size */}
+              {/* PRANAV SHAH - UPDATED with increased font sizes for 372px-700px */}
               <motion.h1
                 className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
@@ -330,7 +330,7 @@ const TheaterCurtain = ({ isOpen = false, onOpen, currentPage = 0 }: TheaterCurt
                 />
               </motion.div>
 
-              {/* ISHIKA AGARWAL - FIXED desktop size */}
+              {/* ISHIKA AGARWAL - UPDATED with increased font sizes for 372px-700px */}
               <motion.h1
                 className="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[32px] lg:text-[42px] xl:text-[52px] 2xl:text-[62px] leading-tight md:leading-normal lg:leading-relaxed break-words max-w-full px-2 whitespace-nowrap md:whitespace-normal"
                 style={{ 
