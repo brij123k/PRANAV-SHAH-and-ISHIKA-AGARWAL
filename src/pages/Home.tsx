@@ -129,6 +129,60 @@ const Home = () => {
           GETTING MARRIED!
         </p>
       </div>
+
+      {/* Scroll Down Indicator - NEW */}
+      <div
+        className="z-10 flex flex-col items-center mt-4"
+        style={{ pointerEvents: 'none' }}
+      >
+        <span
+          style={{
+            color: '#C9A86A',
+            fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
+            fontSize: '10px',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            opacity: 0.8,
+          }}
+        >
+          Scroll
+        </span>
+        {/* Animated chevron arrows */}
+        <div className="flex flex-col items-center" style={{ gap: '2px', marginTop: '4px' }}>
+          {[0, 1, 2].map((i) => (
+            <svg
+              key={i}
+              width="16"
+              height="10"
+              viewBox="0 0 16 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{
+                animation: 'scrollBounce 1.5s ease-in-out infinite',
+                animationDelay: `${i * 0.2}s`,
+                opacity: 0,
+              }}
+            >
+              <path
+                d="M1 1L8 8L15 1"
+                stroke="#C9A86A"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ))}
+        </div>
+      </div>
+
+      {/* Keyframe animation for scroll indicator */}
+      <style>{`
+        @keyframes scrollBounce {
+          0%   { opacity: 0; transform: translateY(-4px); }
+          50%  { opacity: 1; transform: translateY(0px); }
+          100% { opacity: 0; transform: translateY(4px); }
+        }
+      `}</style>
       
       {/* Countdown Section */}
       <div className="w-full mt-64 sm:mt-8 md:mt-10">
