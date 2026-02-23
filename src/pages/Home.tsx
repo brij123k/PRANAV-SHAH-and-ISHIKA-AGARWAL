@@ -1,18 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import ScratchCard from '@/components/ScratchCard2';
 import saveTheDateImage from '@/assets/save thedate.png';
 import CountdownPage from "../components/Countdownpage";
 
+interface Confetti {
+  id: number;
+  x: number;
+  y: number;
+  rotation: number;
+  color: string;
+  delay: number;
+  size: number;
+  shape: string;
+}
+
 const Home = () => {
   const [hasStartedScratching, setHasStartedScratching] = useState(false);
+  const [completedCount, setCompletedCount] = useState(0);
+  const [confetti, setConfetti] = useState<Confetti[]>([]);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const triggerConfetti = useCallback(() => {
+    setShowConfetti(true);
+
+    const pieces: Confetti[] = [];
+    const colors = ['#FFD700', '#FFC125', '#FFDF00', '#FFE55C', '#FFEA70', '#FFF4A3'];
+    const shapes = ['circle', 'diamond', 'star', 'square'];
+
+    for (let i = 0; i < 200; i++) {
+      pieces.push({
+        id: i,
+        x: Math.random() * 100,
+        y: -20,
+        rotation: Math.random() * 360,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 0.5,
+        size: Math.random() * 8 + 3,
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+      });
+    }
+
+    setConfetti(pieces);
+
+    setTimeout(() => {
+      setShowConfetti(false);
+      setConfetti([]);
+    }, 5000);
+  }, []);
+
+  // Called when each individual heart is fully scratched
+  const handleHeartComplete = useCallback(() => {
+    setCompletedCount(prev => {
+      const newCount = prev + 1;
+      if (newCount === 3) {
+        triggerConfetti();
+      }
+      return newCount;
+    });
+  }, [triggerConfetti]);
 
   const handleScratchStart = () => {
     setHasStartedScratching(true);
   };
 
+  const getShapeStyle = (shape: string): React.CSSProperties => {
+    switch (shape) {
+      case 'circle':
+        return { borderRadius: '50%' };
+      case 'diamond':
+        return {
+          borderRadius: '0%',
+          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+        };
+      case 'star':
+        return {
+          clipPath:
+            'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+        };
+      case 'square':
+      default:
+        return { borderRadius: '0%' };
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-start bg-white relative overflow-hidden w-full py-8 sm:py-12 md:py-16">
-      {/* Save the Date Image - INCREASED SIZE */}
+      {/* Save the Date Image */}
       <div className="z-10 mb-12 sm:mb-8 md:mb-12">
         <img 
           src={saveTheDateImage} 
@@ -27,7 +101,7 @@ const Home = () => {
         <ScratchCard
           width={window.innerWidth < 640 ? 70 : 80}
           height={window.innerWidth < 640 ? 66 : 76}
-          onComplete={() => {}}
+          onComplete={handleHeartComplete}
           onScratchStart={handleScratchStart}
           content={
             <p 
@@ -47,7 +121,7 @@ const Home = () => {
         <ScratchCard
           width={window.innerWidth < 640 ? 70 : 80}
           height={window.innerWidth < 640 ? 66 : 76}
-          onComplete={() => {}}
+          onComplete={handleHeartComplete}
           onScratchStart={handleScratchStart}
           content={
             <p 
@@ -67,7 +141,7 @@ const Home = () => {
         <ScratchCard
           width={window.innerWidth < 640 ? 70 : 80}
           height={window.innerWidth < 640 ? 66 : 76}
-          onComplete={() => {}}
+          onComplete={handleHeartComplete}
           onScratchStart={handleScratchStart}
           content={
             <p 
@@ -84,7 +158,7 @@ const Home = () => {
         />
       </div>
 
-      {/* Scratch hint - FIXED: Use opacity and visibility to maintain layout */}
+      {/* Scratch hint */}
       <div 
         className="text-[10px] sm:text-xs md:text-sm tracking-wide text-center z-10 mb-4 sm:mb-6"
         style={{ 
@@ -130,7 +204,7 @@ const Home = () => {
         </p>
       </div>
 
-      {/* Scroll Down Indicator - NEW */}
+      {/* Scroll Down Indicator */}
       <div
         className="z-10 flex flex-col items-center mt-4"
         style={{ pointerEvents: 'none' }}
@@ -147,7 +221,6 @@ const Home = () => {
         >
           Scroll
         </span>
-        {/* Animated chevron arrows */}
         <div className="flex flex-col items-center" style={{ gap: '2px', marginTop: '4px' }}>
           {[0, 1, 2].map((i) => (
             <svg
@@ -175,7 +248,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Keyframe animation for scroll indicator */}
       <style>{`
         @keyframes scrollBounce {
           0%   { opacity: 0; transform: translateY(-4px); }
@@ -188,6 +260,44 @@ const Home = () => {
       <div className="w-full mt-64 sm:mt-8 md:mt-10">
         <CountdownPage/>
       </div>
+
+      {/* Full-screen falling confetti — fires only when all 3 hearts are scratched */}
+      {showConfetti && (
+        <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+          {confetti.map((piece) => (
+            <motion.div
+              key={piece.id}
+              className="absolute"
+              style={{
+                left: `${piece.x}%`,
+                width: `${piece.size}px`,
+                height: `${piece.size}px`,
+                backgroundColor: piece.color,
+                boxShadow: `0 0 ${piece.size * 2}px ${piece.color}`,
+                ...getShapeStyle(piece.shape),
+              }}
+              initial={{
+                y: piece.y,
+                rotate: 0,
+                opacity: 1,
+                scale: 0,
+              }}
+              animate={{
+                y: ['0vh', '120vh'],
+                rotate: [0, piece.rotation * 3, piece.rotation * 6],
+                x: [0, Math.random() * 60 - 30, Math.random() * 80 - 40],
+                opacity: [0, 1, 1, 0.8, 0],
+                scale: [0, 1, 1, 0.8, 0.5],
+              }}
+              transition={{
+                duration: 3.5 + Math.random() * 2.5,
+                delay: piece.delay,
+                ease: 'easeIn',
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
