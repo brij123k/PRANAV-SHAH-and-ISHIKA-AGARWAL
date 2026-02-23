@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import goldenGlitterHeart from '@/assets/golden-glitter-heart8.png';
 import whiteHeart from '@/assets/white_hart1.png';
 
@@ -15,19 +16,15 @@ interface GlitterParticle {
   life: number;
 }
 
-interface ConfettiPiece {
+interface Confetti {
   id: number;
   x: number;
   y: number;
-  vx: number;
-  vy: number;
-  width: number;
-  height: number;
   rotation: number;
-  rotationSpeed: number;
-  life: number;
   color: string;
-  shape: 'rect' | 'circle' | 'star';
+  delay: number;
+  size: number;
+  shape: string;
 }
 
 interface ScratchCardProps {
@@ -37,11 +34,6 @@ interface ScratchCardProps {
   onScratchStart?: () => void;
   content?: React.ReactNode;
 }
-
-const GOLDEN_COLORS = [
-  '#FFD700', '#FFC200', '#D4AF37', '#C9A86A', '#F5C842',
-  '#E8B923', '#FFE066', '#B8960C', '#FADA5E', '#C9B896',
-];
 
 const ScratchCard: React.FC<ScratchCardProps> = ({
   width = 280,
@@ -55,12 +47,13 @@ const ScratchCard: React.FC<ScratchCardProps> = ({
   const [isRevealed, setIsRevealed] = useState(false);
   const [scratchPercent, setScratchPercent] = useState(0);
   const [particles, setParticles] = useState<GlitterParticle[]>([]);
-  const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
-  const [confettiBurst, setConfettiBurst] = useState(false);
   const particleIdRef = useRef(0);
-  const confettiIdRef = useRef(0);
   const animationFrameRef = useRef<number>();
-  const confettiFrameRef = useRef<number>();
+  const scratchStartedRef = useRef(false);
+
+  // Confetti state
+  const [confetti, setConfetti] = useState<Confetti[]>([]);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const heartPath = `
     M ${width/2} ${height * 0.92}
@@ -73,7 +66,37 @@ const ScratchCard: React.FC<ScratchCardProps> = ({
     Z
   `;
 
-  // Spawn glitter particles
+  // Trigger falling confetti — same style as TheaterCurtain
+  const triggerConfetti = useCallback(() => {
+    setShowConfetti(true);
+
+    const pieces: Confetti[] = [];
+    const colors = ['#FFD700', '#FFC125', '#FFDF00', '#FFE55C', '#FFEA70', '#FFF4A3'];
+    const shapes = ['circle', 'diamond', 'star', 'square'];
+
+    for (let i = 0; i < 200; i++) {
+      pieces.push({
+        id: i,
+        x: Math.random() * 100,
+        y: -20,
+        rotation: Math.random() * 360,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 0.5,
+        size: Math.random() * 8 + 3,
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+      });
+    }
+
+    setConfetti(pieces);
+
+    // Auto-hide after animation completes
+    setTimeout(() => {
+      setShowConfetti(false);
+      setConfetti([]);
+    }, 5000);
+  }, []);
+
+  // Spawn glitter particles while scratching
   const spawnGlitter = useCallback((x: number, y: number) => {
     const newParticles: GlitterParticle[] = [];
     for (let i = 0; i < 8; i++) {
@@ -94,33 +117,6 @@ const ScratchCard: React.FC<ScratchCardProps> = ({
     }
     setParticles(prev => [...prev.slice(-50), ...newParticles]);
   }, []);
-
-  // Spawn golden confetti burst from center of card
-  const spawnConfettiBurst = useCallback(() => {
-    const cx = width / 2;
-    const cy = height / 2;
-    const pieces: ConfettiPiece[] = [];
-    for (let i = 0; i < 60; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 10 + 4;
-      const shapes: ('rect' | 'circle' | 'star')[] = ['rect', 'rect', 'circle', 'star'];
-      pieces.push({
-        id: confettiIdRef.current++,
-        x: cx,
-        y: cy,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - Math.random() * 6,
-        width: Math.random() * 8 + 4,
-        height: Math.random() * 4 + 2,
-        rotation: Math.random() * 360,
-        rotationSpeed: (Math.random() - 0.5) * 15,
-        life: 1,
-        color: GOLDEN_COLORS[Math.floor(Math.random() * GOLDEN_COLORS.length)],
-        shape: shapes[Math.floor(Math.random() * shapes.length)],
-      });
-    }
-    setConfetti(pieces);
-  }, [width, height]);
 
   // Animate glitter particles
   useEffect(() => {
@@ -146,33 +142,6 @@ const ScratchCard: React.FC<ScratchCardProps> = ({
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
   }, [particles.length]);
-
-  // Animate confetti
-  useEffect(() => {
-    if (confetti.length === 0) return;
-    const animate = () => {
-      setConfetti(prev => {
-        const updated = prev
-          .map(p => ({
-            ...p,
-            x: p.x + p.vx,
-            y: p.y + p.vy,
-            vy: p.vy + 0.3,
-            vx: p.vx * 0.98,
-            rotation: p.rotation + p.rotationSpeed,
-            life: p.life - 0.012,
-            opacity: p.life,
-          }))
-          .filter(p => p.life > 0);
-        return updated;
-      });
-      confettiFrameRef.current = requestAnimationFrame(animate);
-    };
-    confettiFrameRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (confettiFrameRef.current) cancelAnimationFrame(confettiFrameRef.current);
-    };
-  }, [confetti.length]);
 
   // Initialize canvas
   const initCanvas = useCallback(() => {
@@ -250,10 +219,10 @@ const ScratchCard: React.FC<ScratchCardProps> = ({
     const pos = getPosition(e);
     scratch(pos.x, pos.y);
 
-    // Trigger confetti burst only once on first scratch
-    if (scratchPercent === 0 && !confettiBurst) {
-      setConfettiBurst(true);
-      spawnConfettiBurst();
+    // Trigger confetti only once on very first scratch
+    if (!scratchStartedRef.current) {
+      scratchStartedRef.current = true;
+      triggerConfetti();
       onScratchStart?.();
     }
   };
@@ -269,125 +238,118 @@ const ScratchCard: React.FC<ScratchCardProps> = ({
     setIsScratching(false);
   };
 
-  // Render a confetti star shape inline
-  const renderConfettiPiece = (p: ConfettiPiece) => {
-    if (p.shape === 'circle') {
-      return (
-        <div
-          key={p.id}
-          className="absolute pointer-events-none z-40"
-          style={{
-            left: p.x,
-            top: p.y,
-            width: p.width,
-            height: p.width,
-            borderRadius: '50%',
-            background: p.color,
-            opacity: p.life,
-            transform: `rotate(${p.rotation}deg)`,
-            boxShadow: `0 0 4px ${p.color}99`,
-          }}
-        />
-      );
+  // Confetti shape styles — identical to TheaterCurtain
+  const getShapeStyle = (shape: string): React.CSSProperties => {
+    switch (shape) {
+      case 'circle':
+        return { borderRadius: '50%' };
+      case 'diamond':
+        return {
+          borderRadius: '0%',
+          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+        };
+      case 'star':
+        return {
+          clipPath:
+            'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+        };
+      case 'square':
+      default:
+        return { borderRadius: '0%' };
     }
-    if (p.shape === 'star') {
-      return (
-        <div
-          key={p.id}
-          className="absolute pointer-events-none z-40"
-          style={{
-            left: p.x,
-            top: p.y,
-            opacity: p.life,
-            transform: `rotate(${p.rotation}deg)`,
-            fontSize: `${p.width + 4}px`,
-            color: p.color,
-            lineHeight: 1,
-            textShadow: `0 0 6px ${p.color}`,
-            userSelect: 'none',
-          }}
-        >
-          ★
-        </div>
-      );
-    }
-    // rect (default)
-    return (
-      <div
-        key={p.id}
-        className="absolute pointer-events-none z-40"
-        style={{
-          left: p.x,
-          top: p.y,
-          width: p.width,
-          height: p.height,
-          background: p.color,
-          opacity: p.life,
-          transform: `rotate(${p.rotation}deg)`,
-          borderRadius: '1px',
-          boxShadow: `0 0 3px ${p.color}88`,
-        }}
-      />
-    );
   };
 
   return (
-    <div
-      className="relative select-none"
-      style={{ width, height }}
-    >
-      {/* Background with revealed content */}
-      <div className="absolute inset-0">
-        <img
-          src={whiteHeart}
-          alt="Heart background"
-          className="absolute inset-0 w-full h-full object-contain"
-        />
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-2"
-          style={{ clipPath: `path('${heartPath}')` }}
-        >
-          {content}
+    <>
+      <div className="relative select-none" style={{ width, height }}>
+        {/* Background with revealed content */}
+        <div className="absolute inset-0">
+          <img
+            src={whiteHeart}
+            alt="Heart background"
+            className="absolute inset-0 w-full h-full object-contain"
+          />
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-2"
+            style={{ clipPath: `path('${heartPath}')` }}
+          >
+            {content}
+          </div>
         </div>
+
+        {/* Scratch overlay canvas */}
+        <canvas
+          ref={canvasRef}
+          width={width}
+          height={height}
+          className="absolute inset-0 cursor-pointer touch-none z-20"
+          onMouseDown={handleStart}
+          onMouseMove={handleMove}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={handleStart}
+          onTouchMove={handleMove}
+          onTouchEnd={handleEnd}
+        />
+
+        {/* Glitter particles */}
+        {particles.map(particle => (
+          <div
+            key={particle.id}
+            className="absolute pointer-events-none z-30"
+            style={{
+              left: particle.x,
+              top: particle.y,
+              width: particle.size,
+              height: particle.size,
+              opacity: particle.opacity,
+              transform: `rotate(${particle.rotation}deg)`,
+              background: 'linear-gradient(135deg, #D4C4A8, #C9B896, #B8A67D)',
+              borderRadius: particle.size > 3 ? '2px' : '50%',
+              boxShadow: '0 0 4px rgba(201, 184, 150, 0.8)',
+            }}
+          />
+        ))}
       </div>
 
-      {/* Scratch overlay canvas */}
-      <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
-        className="absolute inset-0 cursor-pointer touch-none z-20"
-        onMouseDown={handleStart}
-        onMouseMove={handleMove}
-        onMouseUp={handleEnd}
-        onMouseLeave={handleEnd}
-        onTouchStart={handleStart}
-        onTouchMove={handleMove}
-        onTouchEnd={handleEnd}
-      />
-
-      {/* Glitter particles */}
-      {particles.map(particle => (
-        <div
-          key={particle.id}
-          className="absolute pointer-events-none z-30"
-          style={{
-            left: particle.x,
-            top: particle.y,
-            width: particle.size,
-            height: particle.size,
-            opacity: particle.opacity,
-            transform: `rotate(${particle.rotation}deg)`,
-            background: 'linear-gradient(135deg, #D4C4A8, #C9B896, #B8A67D)',
-            borderRadius: particle.size > 3 ? '2px' : '50%',
-            boxShadow: '0 0 4px rgba(201, 184, 150, 0.8)',
-          }}
-        />
-      ))}
-
-      {/* Golden confetti burst */}
-      {confetti.map(p => renderConfettiPiece(p))}
-    </div>
+      {/* Full-screen falling confetti overlay — same as TheaterCurtain */}
+      {showConfetti && (
+        <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+          {confetti.map((piece) => (
+            <motion.div
+              key={piece.id}
+              className="absolute"
+              style={{
+                left: `${piece.x}%`,
+                width: `${piece.size}px`,
+                height: `${piece.size}px`,
+                backgroundColor: piece.color,
+                boxShadow: `0 0 ${piece.size * 2}px ${piece.color}`,
+                ...getShapeStyle(piece.shape),
+              }}
+              initial={{
+                y: piece.y,
+                rotate: 0,
+                opacity: 1,
+                scale: 0,
+              }}
+              animate={{
+                y: ['0vh', '120vh'],
+                rotate: [0, piece.rotation * 3, piece.rotation * 6],
+                x: [0, Math.random() * 60 - 30, Math.random() * 80 - 40],
+                opacity: [0, 1, 1, 0.8, 0],
+                scale: [0, 1, 1, 0.8, 0.5],
+              }}
+              transition={{
+                duration: 3.5 + Math.random() * 2.5,
+                delay: piece.delay,
+                ease: 'easeIn',
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 
